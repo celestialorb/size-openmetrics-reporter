@@ -1,4 +1,5 @@
-FROM golang:1.20.1-alpine3.17 as builder
+ARG BINARY_NAME="size-openmetrics-reporter"
+FROM golang:1.20.1 as builder
 
 RUN apk add gcc
 
@@ -8,11 +9,8 @@ COPY go.sum ./
 COPY *.go ./
 
 RUN go mod tidy
-RUN CGO_ENABLED=1 GOEXPERIMENT=boringcrypto go build -o /usr/bin/size-openmetrics-reporter ./...
+RUN CGO_ENABLED=1 GOEXPERIMENT=boringcrypto go build -o /usr/bin/${BINARY_NAME} ./...
 
-# FROM gcr.io/distroless/base-debian11:nonroot
-# RUN apk update && apk add sh
+FROM golang:1.20.1-alpine3.17
 
-# WORKDIR /opt/go
-# COPY --from=builder /opt/go/app /opt/go/app
-# ENTRYPOINT ["/opt/go/app"]
+COPY --from=builder /usr/bin/${BINARY_NAME} /usr/bin/${BINARY_NAME}
