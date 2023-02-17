@@ -1,4 +1,6 @@
-FROM golang:1.20.1-alpine as builder
+FROM golang:1.20.1-alpine3.17 as builder
+
+RUN apk add gcc
 
 WORKDIR /opt/go
 COPY go.mod ./
