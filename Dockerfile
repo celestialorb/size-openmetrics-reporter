@@ -1,7 +1,5 @@
 ARG BINARY_NAME="size-openmetrics-reporter"
-FROM golang:1.20.1-alpine3.17 as builder
-
-RUN apk add gcc
+FROM golang:1.20.1 as builder
 
 WORKDIR /opt/go
 COPY go.mod ./
